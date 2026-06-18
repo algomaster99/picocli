@@ -1,31 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>info.picocli</groupId>
-  <artifactId>picocli</artifactId>
-  <version>4.0.0-alpha-3</version>
-  <packaging>jar</packaging>
-  <name>picocli - a mighty tiny Command Line Interface</name>
-  <description>Java command line parser with both an annotations API and a programmatic API. Usage help with ANSI styles and colors. Autocomplete. Nested subcommands. Easily included as source to avoid adding a dependency.</description>
-  <url>https://picocli.info</url>
-  <inceptionYear>2017</inceptionYear>
-  <licenses>
-    <license>
-      <name>The Apache Software License, version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <developers>
-    <developer>
-      <id>rpopma</id>
-      <name>Remko Popma</name>
-      <email>rpopma@apache.org</email>
-    </developer>
-  </developers>
-  <scm>
-    <url>https://github.com/remkop/picocli/tree/main</url>
-    <connection>scm:git:https://github.com/remkop/picocli.git</connection>
-    <developerConnection>scm:git:ssh://github.com:remkop/picocli.git</developerConnection>
-  </scm>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>info.picocli</groupId>
+    <artifactId>picocli</artifactId>
+    <version>4.7.7</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.release>8</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>2.4.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.pragmatists</groupId>
+            <artifactId>JUnitParams</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.21</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-lambda</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <!-- module-info.java lives in src/main/java9, not src/main/java -->
+                    <excludes>
+                        <exclude>module-info.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>tree-merge</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.2</version>
+                        <configuration>
+                            <argLine>-XX:AOTCacheOutput=cache.aot</argLine>
+                            <!-- TODO: remove includes before merging (debug-only subset) -->
+                            <includes>
+                                <include>picocli/CommandLineTest.java</include>
+                                <include>picocli/CommandAnnotationMethodTest.java</include>
+                                <include>picocli/ModelCommandReflectionTest.java</include>
+                                <include>picocli/RangeTest.java</include>
+                                <include>picocli/InterpolatorTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
